@@ -2,13 +2,12 @@ import React, {useState} from 'react';
 import {
   NativeSyntheticEvent,
   Task,
-  Text,
   TextInput,
   TextInputChangeEventData,
   View,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
+import {Timer} from './Timer';
 
 interface AddTaskFormProps {
   onSubmit: (task: Task) => void;
@@ -16,19 +15,11 @@ interface AddTaskFormProps {
 
 export const AddTaskForm = ({}: AddTaskFormProps) => {
   const [value, setValue] = useState('');
-  const [isActive, setIsActive] = useState(false);
 
   const onTaskNameChange = (
     event: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setValue(event.nativeEvent.text);
-  };
-
-  const onTimerButtonPress = () => {
-    if (isActive) {
-      //onSubmit();
-    }
-    setIsActive(currentState => !currentState);
   };
 
   return (
@@ -43,13 +34,7 @@ export const AddTaskForm = ({}: AddTaskFormProps) => {
         />
       </View>
       <View style={styles.timeColumn}>
-        <Text style={styles.timeText}>00:00:00</Text>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.button, isActive ? styles.stopButton : {}]}
-          onPress={onTimerButtonPress}>
-          <Text style={styles.buttonText}>{isActive ? 'Stop' : 'Start'}</Text>
-        </TouchableOpacity>
+        <Timer onStop={() => null} />
       </View>
     </View>
   );
@@ -78,25 +63,5 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  timeText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  button: {
-    paddingHorizontal: 14,
-    marginLeft: 20,
-    height: 50,
-    width: 70,
-    backgroundColor: 'green',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  stopButton: {
-    backgroundColor: 'red',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });
