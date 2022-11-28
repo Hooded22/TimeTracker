@@ -12,6 +12,7 @@ import React from 'react';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {AddTaskForm} from './src/components/AddTaskForm';
 import {TasksList} from './src/components/TasksList';
 import {Task} from './src/types/task';
 
@@ -55,6 +56,7 @@ const App = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      <AddTaskForm onSubmit={() => {}} />
       <TasksList data={data} />
     </SafeAreaView>
   );
