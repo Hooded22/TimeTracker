@@ -23,6 +23,7 @@ const App = () => {
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    paddingBottom: 100,
   };
 
   useEffect(() => {

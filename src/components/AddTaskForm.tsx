@@ -24,14 +24,9 @@ export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
   const inputIsDisabled = !!taskToEdit;
   const timerIsActiveByDefault = !!taskToEdit;
 
-  console.log('TASK TO EDIT in FORM: ', value, !!taskToEdit, taskToEdit?.name);
-
   const onTaskNameChange = (
     event: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
-    if (inputIsDisabled) {
-      return;
-    }
     setValue(event.nativeEvent.text);
   };
 
@@ -74,6 +69,7 @@ export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
     <View style={styles.container}>
       <View style={styles.nameColumn}>
         <TextInput
+          editable={!inputIsDisabled}
           defaultValue={taskToEdit?.name}
           placeholder="Podaj nazwe zadania"
           value={value}

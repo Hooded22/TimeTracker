@@ -1,5 +1,5 @@
 import {Duration} from 'luxon';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import {Time} from '../types/task';
 
@@ -40,9 +40,9 @@ export const Timer = ({
     intervalRef.current = null;
   };
 
-  const setIntervalForTimeer = () => {
+  const setIntervalForTimeer = useCallback(() => {
     intervalRef.current = setInterval(() => increaseTimerSecond(), 1000);
-  };
+  }, []);
 
   const clearTimer = () => {
     setTime(0);
@@ -59,9 +59,8 @@ export const Timer = ({
       setIntervalForTimeer();
       setIsActive(currentState => !currentState);
     }
-  }, [defaultActive]);
+  }, [defaultActive, setIntervalForTimeer]);
 
-  console.log('DISABLE: ', disabled, disabledButtonStyles());
   return (
     <>
       <Text style={styles.timeText}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {useModal} from '../hooks/useModal';
 import {Task} from '../types/task';
 import {TaskDetailsModal} from './TaskDetailsModal';
@@ -21,6 +21,7 @@ export const TasksList = ({data, onPlayButtonPress}: TasksListProps) => {
     <>
       <FlatList
         data={data}
+        contentContainerStyle={styles.flatListContentContainer}
         renderItem={({item}) => (
           <TaskItem
             onPlayButtonPress={() => onPlayButtonPress(item)}
@@ -34,3 +35,9 @@ export const TasksList = ({data, onPlayButtonPress}: TasksListProps) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  flatListContentContainer: {
+    paddingBottom: 80,
+  },
+});
