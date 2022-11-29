@@ -20,7 +20,7 @@ export const TaskItem = ({
   onPress,
   onPlayButtonPress,
 }: TaskItemProps) => {
-  const [itemIsActive, setItemIsActive] = useState<boolean>();
+  const [itemIsActive, setItemIsActive] = useState<boolean>(false);
   const endHourToDisplay = convertHourToDisplayFormat(new Date(endHour));
   const startHouroDisplay = convertHourToDisplayFormat(new Date(startHour));
   const timeToDisplay = convertTimeToDisplayFormat(time);
@@ -29,6 +29,8 @@ export const TaskItem = ({
     setItemIsActive(true);
     onPlayButtonPress();
   };
+
+  console.log('ITEM PROPS: ', name, time);
 
   if (itemIsActive) {
     return null;

@@ -5,6 +5,7 @@ import {Time} from '../types/task';
 
 interface TimerProps {
   onStop: (time: Time) => void;
+  onStart: () => void;
   disabled?: boolean;
   defaultTime?: Time;
   defaultActive?: boolean;
@@ -12,6 +13,7 @@ interface TimerProps {
 
 export const Timer = ({
   onStop,
+  onStart,
   disabled,
   defaultTime,
   defaultActive,
@@ -21,11 +23,10 @@ export const Timer = ({
   const intervalRef = useRef<number | null>(null);
 
   const onTimerButtonPress = () => {
-    if (isActive && intervalRef.current) {
-      unsetInterval(intervalRef.current);
-      onStop(time);
-      clearTimer();
+    if (isActive) {
+      onButtonStopPress();
     } else {
+      onStart();
       setIntervalForTimeer();
     }
     setIsActive(currentState => !currentState);
@@ -35,18 +36,15 @@ export const Timer = ({
     setTime(currentTime => currentTime + 1000);
   };
 
-  const unsetInterval = (intervalId: number) => {
-    clearInterval(intervalId);
-    intervalRef.current = null;
-  };
+  function onButtonStopPress() {
+    intervalRef.current && clearInterval(intervalRef.current);
+    onStop(time);
+    setTime(0);
+  }
 
   const setIntervalForTimeer = useCallback(() => {
     intervalRef.current = setInterval(() => increaseTimerSecond(), 1000);
   }, []);
-
-  const clearTimer = () => {
-    setTime(0);
-  };
 
   const disabledButtonStyles = (): ViewStyle => {
     return {

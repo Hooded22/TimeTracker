@@ -12,3 +12,7 @@ export interface TaskToAdd extends Omit<Task, 'startHour' | 'endHour'> {
   startHour: Date;
   endHour: Date;
 }
+
+export interface SavedTask extends Task {
+  saveDate: string;
+}

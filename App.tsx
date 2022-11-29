@@ -8,27 +8,21 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddTaskForm} from './src/components/AddTaskForm';
 import {TasksList} from './src/components/TasksList';
 import {useTaskLogic} from './src/hooks/useTaskLogic';
 
 const App = () => {
-  const {getTasksData, addTask, choseTaskToEdit, tasksData, taskToEdit} =
+  const {addTask, setCurrentTask, choseTaskToEdit, data, taskToEdit, loading} =
     useTaskLogic();
-  const isDarkMode = useColorScheme() === 'dark';
 
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    paddingBottom: 100,
   };
-
-  useEffect(() => {
-    getTasksData();
-  }, [getTasksData]);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -37,11 +31,16 @@ const App = () => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <AddTaskForm
-        onSubmit={task => addTask(task)}
+        onStart={setCurrentTask}
+        onSubmit={addTask}
         taskToEdit={taskToEdit}
         key={taskToEdit?.id}
       />
-      <TasksList data={tasksData} onPlayButtonPress={choseTaskToEdit} />
+      <TasksList
+        dataLoading={loading}
+        data={data}
+        onPlayButtonPress={choseTaskToEdit}
+      />
     </SafeAreaView>
   );
 };

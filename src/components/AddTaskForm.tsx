@@ -1,4 +1,3 @@
-import {DateTime, Duration} from 'luxon';
 import React, {useState} from 'react';
 import {
   NativeSyntheticEvent,
@@ -8,20 +7,23 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {Task, TaskToAdd, Time} from '../types/task';
+import {Task, Time} from '../types/task';
 import {Timer} from './Timer';
-import uuid from 'react-native-uuid';
 import {tasksErrors} from '../assets/taskErrorsDictionary';
 
 interface AddTaskFormProps {
-  onSubmit: (task: TaskToAdd) => void;
+  onSubmit: (name: string, time: Time) => void;
+  onStart: (taskName: string) => void;
   taskToEdit?: Task | null;
 }
 
-export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
+export const AddTaskForm = ({
+  onSubmit,
+  onStart,
+  taskToEdit,
+}: AddTaskFormProps) => {
   const [value, setValue] = useState(taskToEdit?.name || '');
   const nameIsEmpty = !value;
-  const inputIsDisabled = !!taskToEdit;
   const timerIsActiveByDefault = !!taskToEdit;
 
   const onTaskNameChange = (
@@ -51,25 +53,13 @@ export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
   };
 
   const addNewTask = (time: Time) => {
-    const newTask: TaskToAdd = {
-      id: taskToEdit?.id || uuid.v4().toString(),
-      name: value,
-      time: time,
-      endHour: new Date(),
-      startHour: taskToEdit?.startHour
-        ? DateTime.fromISO(taskToEdit.startHour)
-            .minus(Duration.fromMillis(time))
-            .toJSDate()
-        : DateTime.now().minus(Duration.fromMillis(time)).toJSDate(),
-    };
-    onSubmit(newTask);
+    onSubmit(value, time);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.nameColumn}>
         <TextInput
-          editable={!inputIsDisabled}
           defaultValue={taskToEdit?.name}
           placeholder="Podaj nazwe zadania"
           value={value}
@@ -81,6 +71,7 @@ export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
       <View style={styles.timeColumn}>
         <Timer
           onStop={onSubmitHandler}
+          onStart={() => onStart(value)}
           disabled={nameIsEmpty}
           defaultActive={timerIsActiveByDefault}
           defaultTime={taskToEdit?.time}
