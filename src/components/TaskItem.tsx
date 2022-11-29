@@ -5,6 +5,7 @@ import {
   convertHourToDisplayFormat,
   convertTimeToDisplayFormat,
 } from '../utils/taskConverterts';
+import PlayIcon from '../assets/icons/PlayIcon';
 
 interface TaskItemProps extends Task {
   onPress?: () => void;
@@ -17,8 +18,8 @@ export const TaskItem = ({
   startHour,
   onPress,
 }: TaskItemProps) => {
-  const endHourToDisplay = convertHourToDisplayFormat(endHour);
-  const startHouroDisplay = convertHourToDisplayFormat(startHour);
+  const endHourToDisplay = convertHourToDisplayFormat(new Date(endHour));
+  const startHouroDisplay = convertHourToDisplayFormat(new Date(startHour));
   const timeToDisplay = convertTimeToDisplayFormat(time);
 
   return (
@@ -29,7 +30,8 @@ export const TaskItem = ({
           <Text>{`${startHouroDisplay} - ${endHourToDisplay}`}</Text>
         </View>
         <View style={styles.timeColumn}>
-          <Text>{timeToDisplay}</Text>
+          <Text style={styles.timeText}>{timeToDisplay}</Text>
+          <PlayIcon />
         </View>
       </View>
     </TouchableOpacity>
@@ -57,5 +59,10 @@ const styles = StyleSheet.create({
   timeColumn: {
     flex: 0.3,
     justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  timeText: {
+    marginRight: 10,
   },
 });

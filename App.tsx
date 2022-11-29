@@ -8,47 +8,25 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddTaskForm} from './src/components/AddTaskForm';
 import {TasksList} from './src/components/TasksList';
-import {Task} from './src/types/task';
-
-const data: Task[] = [
-  {
-    name: 'Test1',
-    time: 13123123123,
-    endHour: new Date(),
-    startHour: new Date(),
-  },
-  {
-    name: 'Test1',
-    time: 13123123123,
-    endHour: new Date(),
-    startHour: new Date(),
-  },
-  {
-    name: 'Test1',
-    time: 13123123123,
-    endHour: new Date(),
-    startHour: new Date(),
-  },
-  {
-    name: 'Test1',
-    time: 13123123123,
-    endHour: new Date(),
-    startHour: new Date(),
-  },
-];
+import {useTaskLogic} from './src/hooks/useTaskLogic';
 
 const App = () => {
+  const {getTasksData, addTask, tasksData} = useTaskLogic();
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    getTasksData();
+  }, [getTasksData]);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -56,8 +34,8 @@ const App = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <AddTaskForm onSubmit={() => {}} />
-      <TasksList data={data} />
+      <AddTaskForm onSubmit={task => addTask(task)} />
+      <TasksList data={tasksData} />
     </SafeAreaView>
   );
 };
