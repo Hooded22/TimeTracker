@@ -17,7 +17,8 @@ import {TasksList} from './src/components/TasksList';
 import {useTaskLogic} from './src/hooks/useTaskLogic';
 
 const App = () => {
-  const {getTasksData, addTask, tasksData} = useTaskLogic();
+  const {getTasksData, addTask, choseTaskToEdit, tasksData, taskToEdit} =
+    useTaskLogic();
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -34,8 +35,12 @@ const App = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <AddTaskForm onSubmit={task => addTask(task)} />
-      <TasksList data={tasksData} />
+      <AddTaskForm
+        onSubmit={task => addTask(task)}
+        taskToEdit={taskToEdit}
+        key={taskToEdit?.id}
+      />
+      <TasksList data={tasksData} onPlayButtonPress={choseTaskToEdit} />
     </SafeAreaView>
   );
 };

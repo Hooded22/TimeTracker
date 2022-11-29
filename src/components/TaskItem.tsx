@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Task} from '../types/task';
 import {
@@ -8,7 +8,8 @@ import {
 import PlayIcon from '../assets/icons/PlayIcon';
 
 interface TaskItemProps extends Task {
-  onPress?: () => void;
+  onPress: () => void;
+  onPlayButtonPress: () => void;
 }
 
 export const TaskItem = ({
@@ -17,10 +18,21 @@ export const TaskItem = ({
   endHour,
   startHour,
   onPress,
+  onPlayButtonPress,
 }: TaskItemProps) => {
+  const [itemIsActive, setItemIsActive] = useState<boolean>();
   const endHourToDisplay = convertHourToDisplayFormat(new Date(endHour));
   const startHouroDisplay = convertHourToDisplayFormat(new Date(startHour));
   const timeToDisplay = convertTimeToDisplayFormat(time);
+
+  const onPlayButtonPressHandler = () => {
+    setItemIsActive(true);
+    onPlayButtonPress();
+  };
+
+  if (itemIsActive) {
+    return null;
+  }
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -31,7 +43,11 @@ export const TaskItem = ({
         </View>
         <View style={styles.timeColumn}>
           <Text style={styles.timeText}>{timeToDisplay}</Text>
-          <PlayIcon />
+          <TouchableOpacity
+            hitSlop={{bottom: 10, top: 10, left: 5, right: 5}}
+            onPress={onPlayButtonPressHandler}>
+            <PlayIcon />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>

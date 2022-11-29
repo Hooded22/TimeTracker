@@ -1,15 +1,22 @@
 import {Duration} from 'luxon';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import {Time} from '../types/task';
 
 interface TimerProps {
   onStop: (time: Time) => void;
   disabled?: boolean;
+  defaultTime?: Time;
+  defaultActive?: boolean;
 }
 
-export const Timer = ({onStop, disabled}: TimerProps) => {
-  const [time, setTime] = useState<Time>(0);
+export const Timer = ({
+  onStop,
+  disabled,
+  defaultTime,
+  defaultActive,
+}: TimerProps) => {
+  const [time, setTime] = useState<Time>(defaultTime || 0);
   const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
@@ -46,6 +53,13 @@ export const Timer = ({onStop, disabled}: TimerProps) => {
       opacity: disabled ? 0.5 : 1,
     };
   };
+
+  useEffect(() => {
+    if (defaultActive) {
+      setIntervalForTimeer();
+      setIsActive(currentState => !currentState);
+    }
+  }, [defaultActive]);
 
   console.log('DISABLE: ', disabled, disabledButtonStyles());
   return (

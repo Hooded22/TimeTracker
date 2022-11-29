@@ -7,9 +7,10 @@ import {TaskItem} from './TaskItem';
 
 interface TasksListProps {
   data: Task[];
+  onPlayButtonPress: (task: Task) => void;
 }
 
-export const TasksList = ({data}: TasksListProps) => {
+export const TasksList = ({data, onPlayButtonPress}: TasksListProps) => {
   const {isOpen, openModal, closeModal, param} = useModal<Task>();
 
   const showTaskDetails = (chosenTask: Task) => {
@@ -22,6 +23,7 @@ export const TasksList = ({data}: TasksListProps) => {
         data={data}
         renderItem={({item}) => (
           <TaskItem
+            onPlayButtonPress={() => onPlayButtonPress(item)}
             key={`${item.name}-${item.startHour}`}
             {...item}
             onPress={() => showTaskDetails(item)}

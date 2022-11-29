@@ -8,22 +8,30 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {TaskToAdd, Time} from '../types/task';
+import {Task, TaskToAdd, Time} from '../types/task';
 import {Timer} from './Timer';
 import uuid from 'react-native-uuid';
 import {tasksErrors} from '../assets/taskErrorsDictionary';
 
 interface AddTaskFormProps {
   onSubmit: (task: TaskToAdd) => void;
+  taskToEdit?: Task | null;
 }
 
-export const AddTaskForm = ({onSubmit}: AddTaskFormProps) => {
-  const [value, setValue] = useState('');
+export const AddTaskForm = ({onSubmit, taskToEdit}: AddTaskFormProps) => {
+  const [value, setValue] = useState(taskToEdit?.name || '');
   const nameIsEmpty = !value;
+  const inputIsDisabled = !!taskToEdit;
+  const timerIsActiveByDefault = !!taskToEdit;
+
+  console.log('TASK TO EDIT in FORM: ', value, !!taskToEdit, taskToEdit?.name);
 
   const onTaskNameChange = (
     event: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
+    if (inputIsDisabled) {
+      return;
+    }
     setValue(event.nativeEvent.text);
   };
 
@@ -49,11 +57,15 @@ export const AddTaskForm = ({onSubmit}: AddTaskFormProps) => {
 
   const addNewTask = (time: Time) => {
     const newTask: TaskToAdd = {
-      id: uuid.v4().toString(),
+      id: taskToEdit?.id || uuid.v4().toString(),
       name: value,
       time: time,
       endHour: new Date(),
-      startHour: DateTime.now().minus(Duration.fromMillis(time)).toJSDate(),
+      startHour: taskToEdit?.startHour
+        ? DateTime.fromISO(taskToEdit.startHour)
+            .minus(Duration.fromMillis(time))
+            .toJSDate()
+        : DateTime.now().minus(Duration.fromMillis(time)).toJSDate(),
     };
     onSubmit(newTask);
   };
@@ -62,6 +74,7 @@ export const AddTaskForm = ({onSubmit}: AddTaskFormProps) => {
     <View style={styles.container}>
       <View style={styles.nameColumn}>
         <TextInput
+          defaultValue={taskToEdit?.name}
           placeholder="Podaj nazwe zadania"
           value={value}
           onChange={onTaskNameChange}
@@ -70,7 +83,12 @@ export const AddTaskForm = ({onSubmit}: AddTaskFormProps) => {
         />
       </View>
       <View style={styles.timeColumn}>
-        <Timer onStop={onSubmitHandler} disabled={nameIsEmpty} />
+        <Timer
+          onStop={onSubmitHandler}
+          disabled={nameIsEmpty}
+          defaultActive={timerIsActiveByDefault}
+          defaultTime={taskToEdit?.time}
+        />
       </View>
     </View>
   );

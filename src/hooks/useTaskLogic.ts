@@ -7,6 +7,7 @@ import {Task, TaskToAdd} from '../types/task';
 
 export const useTaskLogic = () => {
   const [tasksData, setTasksData] = useState<Task[]>([]);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [loading, setLoading] = useState(false);
 
   const getTasksData = useCallback(async () => {
@@ -17,7 +18,7 @@ export const useTaskLogic = () => {
       );
       if (dataINJSONString) {
         const data = JSON.parse(dataINJSONString);
-        setTasksData(data);
+        setTasksData(sortTasksByStartHour(data));
       } else {
         setTasksData([]);
       }
@@ -29,30 +30,52 @@ export const useTaskLogic = () => {
     }
   }, []);
 
+  const addTaskIntoDataArrayOrUpdateExisting = useCallback(
+    (task: TaskToAdd) => {
+      const indexOfTask = tasksData.findIndex(item => item.id === task.id);
+      if (indexOfTask === -1) {
+        return [...tasksData, task];
+      } else {
+        const dataCopy: (Task | TaskToAdd)[] = [...tasksData];
+        dataCopy[indexOfTask] = task;
+        return dataCopy;
+      }
+    },
+    [tasksData],
+  );
+
   const addTask = useCallback(
     async (newTask: TaskToAdd) => {
-      const newData = [...tasksData, newTask];
+      const newData = addTaskIntoDataArrayOrUpdateExisting(newTask);
       try {
         await AsyncStorage.setItem(
           taskAsyncStoreageKeys.TASKS_LIST,
           JSON.stringify(newData),
         );
         getTasksData();
+        setTaskToEdit(null);
       } catch (error) {
         Alert.alert(tasksErrors.ADD_TASK_ERROR);
       }
     },
-    [getTasksData, tasksData],
+    [addTaskIntoDataArrayOrUpdateExisting, getTasksData],
   );
 
-  //   const updateTask = () => {};
-
-  //   const sortTasksByStartHour = (tasksToSort: Task[]) => {};
+  const choseTaskToEdit = (task: Task) => {
+    setTaskToEdit(task);
+  };
+  const sortTasksByStartHour = (tasksToSort: Task[]) => {
+    return tasksToSort.sort((prev, next) => {
+      return new Date(prev.startHour) < new Date(next.startHour) ? 1 : -1;
+    });
+  };
 
   return {
     addTask,
     getTasksData,
+    choseTaskToEdit,
     loading,
     tasksData,
+    taskToEdit,
   };
 };
