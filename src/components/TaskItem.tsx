@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Task} from '../types/task';
 import {
@@ -10,6 +10,7 @@ import PlayIcon from '../assets/icons/PlayIcon';
 interface TaskItemProps extends Task {
   onPress: () => void;
   onPlayButtonPress: () => void;
+  activeItem?: boolean;
 }
 
 export const TaskItem = ({
@@ -17,20 +18,19 @@ export const TaskItem = ({
   time,
   endHour,
   startHour,
+  activeItem,
   onPress,
   onPlayButtonPress,
 }: TaskItemProps) => {
-  const [itemIsActive, setItemIsActive] = useState<boolean>(false);
   const endHourToDisplay = convertHourToDisplayFormat(new Date(endHour));
   const startHouroDisplay = convertHourToDisplayFormat(new Date(startHour));
   const timeToDisplay = convertTimeToDisplayFormat(time);
 
   const onPlayButtonPressHandler = () => {
-    setItemIsActive(true);
     onPlayButtonPress();
   };
 
-  if (itemIsActive) {
+  if (activeItem) {
     return null;
   }
 
@@ -39,7 +39,10 @@ export const TaskItem = ({
       <View style={styles.taskListItem}>
         <View style={styles.nameColumn}>
           <Text style={styles.taskName}>{name}</Text>
-          <Text>{`${startHouroDisplay} - ${endHourToDisplay}`}</Text>
+          <Text
+            style={
+              styles.taskTime
+            }>{`${startHouroDisplay} - ${endHourToDisplay}`}</Text>
         </View>
         <View style={styles.timeColumn}>
           <Text style={styles.timeText}>{timeToDisplay}</Text>
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     paddingBottom: 5,
+    color: 'white',
+  },
+  taskTime: {
+    color: 'white',
   },
   nameColumn: {
     flex: 0.7,
@@ -80,5 +87,6 @@ const styles = StyleSheet.create({
   },
   timeText: {
     marginRight: 10,
+    color: 'white',
   },
 });

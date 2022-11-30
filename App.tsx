@@ -32,6 +32,7 @@ const App = () => {
         key={taskToEdit?.id}
       />
       <TasksList
+        taskToEdit={taskToEdit}
         dataLoading={loading}
         data={data}
         onPlayButtonPress={choseTaskToEdit}
