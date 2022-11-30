@@ -65,6 +65,7 @@ export const Timer = ({
         {Duration.fromMillis(time).toFormat('hh:mm:ss')}
       </Text>
       <TouchableOpacity
+        testID="timer-button"
         disabled={disabled}
         activeOpacity={0.8}
         style={[

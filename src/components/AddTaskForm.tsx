@@ -1,17 +1,10 @@
 import React, {useState} from 'react';
-import {
-  NativeSyntheticEvent,
-  TextInput,
-  TextInputChangeEventData,
-  View,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import {TextInput, View, StyleSheet, Alert} from 'react-native';
 import {Task, Time} from '../types/task';
 import {Timer} from './Timer';
 import {tasksErrors} from '../assets/taskErrorsDictionary';
 
-interface AddTaskFormProps {
+export interface AddTaskFormProps {
   onSubmit: (name: string, time: Time) => void;
   onStart: (taskName: string) => void;
   taskToEdit?: Task | null;
@@ -25,12 +18,6 @@ export const AddTaskForm = ({
   const [value, setValue] = useState(taskToEdit?.name || '');
   const nameIsEmpty = !value;
   const timerIsActiveByDefault = !!taskToEdit;
-
-  const onTaskNameChange = (
-    event: NativeSyntheticEvent<TextInputChangeEventData>,
-  ) => {
-    setValue(event.nativeEvent.text);
-  };
 
   const onSubmitHandler = (time: Time) => {
     try {
@@ -63,7 +50,7 @@ export const AddTaskForm = ({
           defaultValue={taskToEdit?.name}
           placeholder="Podaj nazwe zadania"
           value={value}
-          onChange={onTaskNameChange}
+          onChangeText={setValue}
           placeholderTextColor="#ccc"
           style={styles.nameInput}
         />

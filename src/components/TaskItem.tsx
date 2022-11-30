@@ -30,8 +30,6 @@ export const TaskItem = ({
     onPlayButtonPress();
   };
 
-  console.log('ITEM PROPS: ', name, time);
-
   if (itemIsActive) {
     return null;
   }
