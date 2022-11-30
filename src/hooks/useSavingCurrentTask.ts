@@ -50,7 +50,6 @@ export const useSaveTask = (onGetSavedTaskTime: (savedTask: Task) => void) => {
   };
 
   useEffect(() => {
-    console.log('NEW CURRENT TASK: ', taskToSave);
     const stateListener = AppState.addEventListener('change', appState =>
       appStateListener(appState, taskToSave),
     );

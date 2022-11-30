@@ -46,7 +46,6 @@ export const useTaskController = () => {
   const addTask = useCallback(
     async (newTask: TaskToAdd) => {
       const newData = addTaskIntoDataArrayOrUpdateExisting(newTask);
-      console.log('NEW DATA: ', newData);
       try {
         await AsyncStorage.setItem(
           taskAsyncStoreageKeys.TASKS_LIST,

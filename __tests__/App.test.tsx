@@ -7,7 +7,6 @@ import {
 } from '@testing-library/react-native';
 import App from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {taskAsyncStoreageKeys} from '../src/assets/taskAsyncStorageKeys';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(),
@@ -19,7 +18,7 @@ jest.mock('react-native-uuid', () => ({
 }));
 
 describe('App tests', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     jest.useFakeTimers();
   });
   afterEach(() => {
