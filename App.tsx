@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddTaskForm} from './src/components/AddTaskForm';
 import {TasksList} from './src/components/TasksList';
@@ -19,17 +19,12 @@ const App = () => {
   const {addTask, setCurrentTask, choseTaskToEdit, data, taskToEdit, loading} =
     useTaskLogic();
 
-  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: Colors.darker,
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
       <AddTaskForm
         onStart={setCurrentTask}
         onSubmit={addTask}
