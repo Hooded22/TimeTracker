@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, ViewStyle} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AddTaskForm} from './src/components/AddTaskForm';
 import {TasksList} from './src/components/TasksList';
@@ -19,8 +19,10 @@ const App = () => {
   const {addTask, setCurrentTask, choseTaskToEdit, data, taskToEdit, loading} =
     useTaskLogic();
 
-  const backgroundStyle = {
+  const backgroundStyle: ViewStyle = {
     backgroundColor: Colors.darker,
+    display: 'flex',
+    flex: 1,
   };
 
   return (

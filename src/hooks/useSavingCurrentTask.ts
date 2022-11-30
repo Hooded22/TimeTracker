@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DateTime} from 'luxon';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {taskAsyncStoreageKeys} from '../assets/taskAsyncStorageKeys';
 import {SavedTask, Task} from '../types/task';
 
 export const useSaveTask = (onGetSavedTaskTime: (savedTask: Task) => void) => {
   const [taskToSave, setTaskToSave] = useState<SavedTask>();
+  const appState = useRef(AppState.currentState);
 
   const removeTaskToSave = async () => {
     AsyncStorage.removeItem(taskAsyncStoreageKeys.CURRENT_TASK);
@@ -18,7 +19,11 @@ export const useSaveTask = (onGetSavedTaskTime: (savedTask: Task) => void) => {
       nextAppState: AppStateStatus,
       newTaskToSave: SavedTask | undefined,
     ) => {
-      if (nextAppState === 'inactive' && newTaskToSave) {
+      if (
+        appState.current === 'active' &&
+        nextAppState.match(/inactive|background/) &&
+        newTaskToSave
+      ) {
         await AsyncStorage.setItem(
           taskAsyncStoreageKeys.CURRENT_TASK,
           JSON.stringify(newTaskToSave),
@@ -38,6 +43,8 @@ export const useSaveTask = (onGetSavedTaskTime: (savedTask: Task) => void) => {
           onGetSavedTaskTime(taskToContinuingTracking);
         }
       }
+
+      appState.current = nextAppState;
     },
     [onGetSavedTaskTime],
   );
@@ -50,8 +57,8 @@ export const useSaveTask = (onGetSavedTaskTime: (savedTask: Task) => void) => {
   };
 
   useEffect(() => {
-    const stateListener = AppState.addEventListener('change', appState =>
-      appStateListener(appState, taskToSave),
+    const stateListener = AppState.addEventListener('change', nextAppState =>
+      appStateListener(nextAppState, taskToSave),
     );
 
     return () => stateListener.remove();
