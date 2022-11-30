@@ -40,13 +40,13 @@ export const TaskDetailsModal = ({
             style={
               styles.modalText
             }>{`Godzina rozpoczęcia: ${convertHourToDisplayFormat(
-            task.startHour,
+            new Date(task.startHour),
           )}`}</Text>
           <Text
             style={
               styles.modalText
             }>{`Godzina zakończenia: ${convertHourToDisplayFormat(
-            task.endHour,
+            new Date(task.endHour),
           )}`}</Text>
           <Text style={styles.modalText}>{`Czas: ${convertTimeToDisplayFormat(
             task.time,
